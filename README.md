@@ -3,9 +3,8 @@
 
 A complete Self-Reflective Retrieval-Augmented Generation (RAG) implementation using LangGraph. This project implements a 7-step Self-RAG pipeline with query rewriting for improved retrieval quality.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/Shree2106/self_reflective_rag/main/self_rag_langgraph_workflow.svg" width="700"/>
-</p>
+<img width="717" height="853" alt="self_rag_graph" src="https://github.com/user-attachments/assets/4edcdcb0-6e4e-4e1b-9386-7dc7d9287686" />
+
 
 ## Overview
 
