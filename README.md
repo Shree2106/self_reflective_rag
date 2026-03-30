@@ -1,7 +1,7 @@
 
-# Self-RAG with Query Rewrite
+#   Self-RAG using LangGraph for Grounded Question Answer
 
-A complete Self-Reflective Retrieval-Augmented Generation (RAG) implementation using LangGraph. This project implements a 7-step Self-RAG pipeline with query rewriting for improved retrieval quality.
+A complete Self-Reflective Retrieval-Augmented Generation (RAG) implementation using LangGraph. This project implements Self-RAG pipeline with query rewriting for improved retrieval quality.
 
 <img width="717" height="853" alt="self_rag_graph" src="https://github.com/user-attachments/assets/4edcdcb0-6e4e-4e1b-9386-7dc7d9287686" />
 
@@ -61,7 +61,7 @@ pip install -r requirements.txt
 
 **4. Verify installation:**
 ```bash
-python -c "from langgraph.graph import StateGraph; print('✅ All packages installed')"
+python -c "from langgraph.graph import StateGraph; print('All packages installed')"
 ```
 
 ### Manual Installation (Alternative)
@@ -128,17 +128,6 @@ result = app.invoke({
     └── Product_and_Pricing.pdf
 ```
 
-## Architecture
-
-The Self-RAG pipeline is built as a **state machine** using LangGraph, where each node represents a decision point or processing step.
-
-### Node Types (by color in diagram)
-
-| Color | Type | Nodes | Purpose |
-|-------|------|-------|---------|
-| **Blue** | Processing | `decide_retrieval`, `retrieve`, `generate_from_context`, `generate_direct` | Core document processing and generation |
-| **Green** | Verification | `is_relevant`, `is_sup`, `is_use` | Quality checks and validation |
-| **Yellow** | Routing | `route_after_decide`, `route_after_relevance`, `route_after_issup`, `route_after_isuse` | Conditional flow control |
 
 ### Data Flow
 
@@ -193,76 +182,3 @@ class State(TypedDict):
 3. **Recursion Limit**: LangGraph's `recursion_limit` prevents infinite loops
 4. **Structured Output**: Pydantic models enforce LLM response schemas
 
-## Configuration
-
-### Environment Variables
-
-Create a `.env` file or set these in your environment:
-
-```bash
-# Required: OpenAI API Key
-OPENAI_API_KEY=your-openai-api-key-here
-
-# Optional: Custom model selection
-OPENAI_MODEL=gpt-4o-mini
-EMBEDDING_MODEL=text-embedding-3-large
-```
-
-### Adjustable Constants
-
-Edit these in `self_rag_step7.ipynb` (Cell 29 and Cell 33):
-
-| Constant | Default | Description |
-|----------|---------|-------------|
-| `MAX_RETRIES` | 10 | Maximum revision attempts when IsSUP fails |
-| `MAX_REWRITE_TRIES` | 3 | Maximum query rewrites when IsUSE fails |
-
-### Chunking Parameters
-
-In Cell 10, adjust text splitting:
-
-```python
-RecursiveCharacterTextSplitter(
-    chunk_size=600,    # Characters per chunk (reduce for finer granularity)
-    chunk_overlap=150  # Overlap between chunks (prevents context loss)
-)
-```
-
-### Retrieval Settings
-
-In Cell 12, adjust FAISS retriever:
-
-```python
-retriever = vector_store.as_retriever(
-    search_kwargs={"k": 4}  # Number of chunks to retrieve
-)
-```
-
-### LLM Configuration
-
-In Cell 14, adjust generation parameters:
-
-```python
-llm = ChatOpenAI(
-    model="gpt-4o-mini",  # Model name (gpt-4o-mini, gpt-4o, etc.)
-    temperature=0          # Lower = more deterministic, higher = more creative
-)
-```
-
-### Recursion Safety
-
-In Cell 40, prevent infinite loops:
-
-```python
-config={"recursion_limit": 80}  # Maximum graph steps before timeout
-```
-
-## Requirements
-
-- Python 3.8+
-- OpenAI API key
-- Dependencies listed in `requirements.txt`
-
-## License
-
-MIT License
